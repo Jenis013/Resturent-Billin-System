@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles (Keep these) */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('Log\ In.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+    
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    
+        main {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+    
+        /* Menu Items (Keep these) */
+        .menu-items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    
+        .menu-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+        .menu-item span {
+            font-weight: bold;
+        }
+    
+        /* Search Bar (Keep these) */
+        #menuSearch {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    
+        /* Buttons */
+        .menu-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+    
+        /* VERY IMPORTANT:  Specific selectors! */
+        .menu-buttons #addItem,
+        .menu-buttons #backButton {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #f44336;
+            color: white;
+        }
+    
+        .menu-buttons #addItem:hover,
+        .menu-buttons #backButton:hover {
+            background-color: #d32f2f;
+        }
+    
+        /* Modal Styles (Keep these) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            position: relative;
+        }
+    
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    
+        .modal-content input[type="text"],
+        .modal-content input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    
+        .modal-buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        #addItemButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+    
+        #addItemButton:hover {
+            background-color: #45a049;
+        }
+    
+        #cancelAddItem {
+            background-color: #f44336;
+            color: white;
+        }
+    
+        #cancelAddItem:hover {
+            background-color: #d32f2f;
+        }
+    
+        /* New styles for remove button and confirmation modal (Keep these) */
+        .remove-item {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    
+        .remove-item:hover {
+            background-color: #d32f2f;
+        }
+    
+        #confirmationModal {
+            display: none;
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .confirmation-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+    
+        .confirmation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #confirmRemove {
+            background-color: #f44336;
+            color: white;
+        }
+    
+        #confirmRemove:hover {
+            background-color: #d32f2f;
+        }
+
+        #cancelRemove {
+            background-color: #f44336;
+            color: white;
+        }
+    
+        #cancelRemove:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <main>
+            <input type="text" id="menuSearch" placeholder="Search by name or price...">
+            <div class="menu-items-container">
+            </div>
+
+            <div id="addItemModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Add New Item</h2>
+                    <input type="text" id="itemName" placeholder="Item Name">
+                    <input type="number" id="itemPrice" placeholder="Item Price">
+                    <div class="modal-buttons">
+                        <button id="addItemButton">Add</button>
+                        <button id="cancelAddItem">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="confirmationModal" class="modal">
+                <div class="confirmation-modal-content">
+                    <p>Are you sure you want to remove this item?</p>
+                    <div class="confirmation-buttons">
+                        <button id="confirmRemove">Yes, Remove</button>
+                        <button id="cancelRemove">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-buttons">
+                <button id="addItem">Add Item</button>
+                <button id="backButton">Back</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const menuItemsContainer = document.querySelector('.menu-items-container');
+        const addItemModal = document.getElementById('addItemModal');
+        const addItemButton = document.getElementById('addItem');
+        const cancelAddItemButton = document.getElementById('cancelAddItem');
+        const addItemModalButton = document.getElementById('addItemButton');
+        const backButton = document.getElementById('backButton');
+        const itemNameInput = document.getElementById('itemName');
+        const itemPriceInput = document.getElementById('itemPrice');
+        const closeButton = document.querySelector('.close');
+        const menuSearchInput = document.getElementById('menuSearch'); // Search input
+
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmRemoveButton = document.getElementById('confirmRemove');
+        const cancelRemoveButton = document.getElementById('cancelRemove');
+        let itemToRemove = null;
+
+        let allMenuItems = []; // Store all menu items for searching
+
+        // Function to fetch the menu items from the server
+        async function fetchMenuItems() {
+            try {
+                const response = await fetch(`http://localhost:5000/api/menu/any-value`, {
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Could not fetch menu items');
+                }
+                const items = await response.json();
+                allMenuItems = items; // Store the fetched items
+                displayMenuItems(items);
+            } catch (error) {
+                console.error(error);
+                menuItemsContainer.textContent = 'Error: Could not fetch menu items.';
+            }
+        }
+
+        // Function to display the menu items on the page
+        function displayMenuItems(items) {
+            menuItemsContainer.innerHTML = '';
+            items.forEach(item => {
+                const menuItemDiv = document.createElement('div');
+                menuItemDiv.classList.add('menu-item');
+                menuItemDiv.innerHTML = `
+                    <span>${item.name} - ₹${item.price}</span>
+                    <button class="remove-item" data-id="${item._id}">Remove</button>
+                `;
+                menuItemsContainer.appendChild(menuItemDiv);
+            });
+
+            const removeButtons = document.querySelectorAll('.remove-item');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    itemToRemove = button.dataset.id;
+                    confirmationModal.style.display = 'flex';
+                });
+            });
+        }
+
+        // Function to add a new item to the menu
+        async function addItemToMenu(item) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/menu/any-value`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('token')
+                    },
+                    body: JSON.stringify(item)
+                });
+                if (!response.ok) {
+                    throw new Error('Could not add item');
+                }
+                fetchMenuItems();
+                closeModal();
+                alert('Item added successfully!');
+            } catch (error) {
+                console.error(error);
+                alert('Could not add item. Please try again.');
+            }
+        }
+
+        // Function to remove the item from the menu
+        async function removeItemFromMenu(itemId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/menu/items/${itemId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': localStorage.getItem('token')
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Could not remove item');
+                }
+                fetchMenuItems();
+                closeConfirmationModal();
+                alert('Item removed successfully!');
+            } catch (error) {
+                console.error(error);
+                alert('Could not remove item. Please try again.');
+            }
+        }
+
+        // Function to open the modal
+        function openModal() {
+            addItemModal.style.display = 'flex';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            addItemModal.style.display = 'none';
+            itemNameInput.value = '';
+            itemPriceInput.value = '';
+        }
+
+        function openConfirmationModal() {
+            confirmationModal.style.display = 'flex';
+        }
+
+        function closeConfirmationModal() {
+            confirmationModal.style.display = 'none';
+        }
+
+        // Event Listeners
+        addItemButton.addEventListener('click', openModal);
+
+        closeButton.addEventListener('click', closeModal);
+        cancelAddItemButton.addEventListener('click', closeModal);
+
+        addItemModalButton.addEventListener('click', () => {
+            const name = itemNameInput.value.trim();
+            const price = parseFloat(itemPriceInput.value);
+
+            if (name && !isNaN(price)) {
+                addItemToMenu({ name, price });
+            } else {
+                alert('Please enter a valid item name and price.');
+            }
+        });
+
+        backButton.addEventListener('click', () => {
+            window.location.href = 'Home.html';
+        });
+
+        confirmRemoveButton.addEventListener('click', () => {
+            if (itemToRemove) {
+                removeItemFromMenu(itemToRemove);
+            }
+        });
+
+        cancelRemoveButton.addEventListener('click', () => {
+            closeConfirmationModal();
+            itemToRemove = null;
+        });
+
+        // Search functionality
+        menuSearchInput.addEventListener('input', () => {
+            const searchTerm = menuSearchInput.value.toLowerCase();
+            const filteredItems = allMenuItems.filter(item => {
+                return item.name.toLowerCase().includes(searchTerm) || item.price.toString().includes(searchTerm);
+            });
+            displayMenuItems(filteredItems);
+        });
+
+        // Initial fetch of menu items
+        fetchMenuItems();
+    </script>
+</body>
+
+</html>

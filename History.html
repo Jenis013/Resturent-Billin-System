@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Order History Specific Styles */
+        .order-container {
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 80%;
+            margin-left: 10%;
+            align-items: center;
+            position: relative;
+        }
+
+        .order {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .order p {
+            margin: 5px 0;
+        }
+
+        .search-container {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="Home.html">Home</a>
+            <a href="#" class="active">Order History</a>
+            <a href="Order.html">Take Order</a>
+            <a href="Employee.html">Employee Management</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search Orders">
+        </div>
+
+        <div class="order-container" id="orderContainer">
+            </div>
+    </main>
+
+    <footer>
+        <button class="contact-button" style="display: none;">Contact Us</button>
+        <button class="feedback-button" style="display: none;">Feedback</button>
+    </footer>
+
+    <div class="side-menu">
+        <a href="Profile.html">Profile</a>
+        <a href="Menu.html">Menu</a>
+        <a href="#" id="logout">Logout</a>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div id="notification-container"></div>
+
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to log out?</p>
+            <div class="modal-buttons">
+                <button id="confirm-logout">Yes</button>
+                <button id="cancel-logout">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="History.js"></script>
+</body>
+
+</html>

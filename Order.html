@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Order</title>
+    <link rel="stylesheet" href="Order.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <nav class="navbar">
+                <div class="menu-icon">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <a href="Home.html">Home</a>
+                <a href="History.html">Order history</a>
+                <a href="Order.html" class="active">Take Order</a>
+                <a href="Employee.html">Employee Management</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="order-content">
+                <h1>Table Order</h1>
+                <div id="table-container">
+                    </div>
+                <div id="order-form">
+                    <h2>Order Details</h2>
+                    <form id="order-details-form">
+                        <input type="text" id="customerName" placeholder="customerName" required><br><br>
+                        <input type="text" id="customerMobile" placeholder="Mobile No." required><br><br>
+                        <button type="submit">Place Order</button>
+                    </form>
+                </div>
+                <div id="message"></div>
+            </div>
+        </main>
+
+        <div class="side-menu">
+            <a href="Profile.html">Profile</a>
+            <a href="Menu.html">Menu</a>
+            <a href="#" id="logout">Logout</a>
+        </div>
+
+        <div class="overlay"></div>
+
+        <div id="notification-container"></div>
+
+        <div id="confirmation-modal" class="modal">
+            <div class="modal-content">
+                <p>Are you sure you want to log out?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-logout">Yes</button>
+                    <button id="cancel-logout">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="Order.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+
+</html>

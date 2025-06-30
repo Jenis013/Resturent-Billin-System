@@ -1,0 +1,191 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('Log In.png');
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    opacity: 0.9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+}
+
+h1 {
+    color: red;
+    text-align: center;
+}
+
+#signupForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: red;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+a {
+    color: red;
+    text-decoration: none;
+}
+
+p {
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Notification Container Styles */
+#notification-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.alert.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.alert.error {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: auto;
+    z-index: 1001;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#restaurantNameSubmit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#restaurantNameCancel {
+    background-color: #f44336;
+    color: white;
+}
+
+#okButton {
+    background-color: #4CAF50;
+    color: white;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+    font-size: 1em;
+}
+
+/* Employee Fields */
+#employeeFields {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    /* Use Flexbox */
+    flex-direction: column;
+    /* Stack items vertically */
+}
+
+#employeeFields label {
+    margin-bottom: 5px;
+    /* Reduced space below labels */
+}
+
+#employeeFields input {
+    margin-bottom: 8px;
+    /* Reduced space below inputs */
+}

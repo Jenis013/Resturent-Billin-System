@@ -1,0 +1,246 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('Log\ In.png') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* Establish stacking context */
+    z-index: 1; /* Keep it above other elements */
+}
+
+.navbar a {
+    text-decoration: none;
+    margin: 0 15px;
+    color: black;
+    font-weight: bold;
+}
+
+.navbar a.active {
+    color: red;
+}
+
+/* Menu Icon */
+.menu-icon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 2; /* Higher than navbar content */
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: darkred;
+}
+
+/* Welcome Message */
+.welcome-message {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    margin: 50px auto;
+    padding: 20px;
+    width: 60%;
+    text-align: center;
+}
+
+.welcome-message h1 {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 24px;
+}
+
+.welcome-message p {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 18px;
+}
+
+/* Footer Buttons */
+footer {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto 20px;
+    margin-top: 10px;
+}
+
+footer .contact-button,
+footer .feedback-button {
+    background-color: white;
+    border: 2px solid red;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+footer .contact-button:hover,
+footer .feedback-button:hover {
+    background-color: red;
+    color: white;
+}
+
+/* Side Menu Styles */
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 3; /* Higher than overlay */
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.side-menu a {
+    padding: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.side-menu a:last-child {
+    margin-bottom: 0;
+}
+
+.side-menu .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* Overlay Styles (for blur) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s, width 0s 0.5s, height 0s 0.5s;
+}
+
+.overlay.active {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: opacity 0.5s, width 0s, height 0s;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+main.blur {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}
+
+/* Notification Styles */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 4; /* Higher than modal */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s, transform 0.5s;
+    z-index: 5; /* Higher than modal */
+}
+
+.alert.success {
+    background-color: #4CAF50;
+}
+
+/* Confirmation Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 3; /* Above everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#confirm-logout {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#cancel-logout {
+    background-color: #f44336;
+    color: white;
+}

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Restaurant Billing System - View Employee</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: url('Log \in.png') no-repeat center center fixed;
+            /* Replace with your image */
+            background-size: cover;
+            margin: 0;
+            justify-content: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar a.active {
+            color: red;
+        }
+
+        .logout-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: darkred;
+        }
+
+        .search-container {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+
+        .employee-container {
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 80%;
+            margin-left: 10%;
+            align-items: center;
+            position: relative;
+            /* For absolute positioning of the back button */
+        }
+
+        .employee {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            /* Space between content and button */
+            align-items: center;
+        }
+
+        .employee p {
+            margin: 5px 0;
+            display: block;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        #back-button {
+            background-color: #c0392b;
+            /* Match AddEmployee.html button */
+            color: white;
+            padding: 12px 20px;
+            /* Match AddEmployee.html button */
+            border: none;
+            border-radius: 5px;
+            /* Match AddEmployee.html button */
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1em;
+            /* Match AddEmployee.html button */
+        }
+
+        #back-button:hover {
+            background-color: #942b22;
+            /* Darker red on hover */
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            /* Red color */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+            /* Darker red on hover */
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-buttons {
+            margin-top: 15px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 15px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #confirm-delete {
+            background-color: #28a745;
+            /* Green */
+            color: white;
+        }
+
+        #cancel-delete {
+            background-color: #6c757d;
+            /* Gray */
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="Home.html">Home</a>
+            <a href="History.html">Order history</a>
+            <a href="Order.html">Take Order</a>
+            <a href="Employee.html" class="active">Employee Management</a>
+        </nav>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search Employee">
+    </div>
+
+    <div class="employee-container" id="employeeContainer">
+        </div>
+
+    <button id="back-button" onclick="window.location.href='Employee.html'">Back</button>
+
+    <script>
+        const employeeContainer = document.getElementById('employeeContainer');
+        const searchInput = document.getElementById('searchInput');
+
+        function showError(message, type = 'error') {
+            const errorDiv = document.createElement('div');
+            errorDiv.classList.add('error-message');
+            errorDiv.textContent = message;
+
+            // Style the error box
+            errorDiv.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+            errorDiv.style.color = type === 'success' ? '#155724' : '#721c24';
+            errorDiv.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+
+            errorDiv.style.padding = '10px';
+            errorDiv.style.marginBottom = '10px';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.style.textAlign = 'center';
+            errorDiv.style.opacity = '0'; // Initially hidden
+
+            employeeContainer.prepend(errorDiv);
+
+            // Trigger fade-in animation
+            setTimeout(() => {
+                errorDiv.style.opacity = 1;
+                errorDiv.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Automatically remove the error message after a few seconds
+            setTimeout(() => {
+                errorDiv.style.opacity = 0;
+                errorDiv.style.transform = 'translateY(-20px)';
+                setTimeout(() => errorDiv.remove(), 500);
+            }, 3000);
+        }
+
+
+        async function fetchOwnerAndEmployees() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    showError('Authentication token is missing.');
+                    return;
+                }
+
+                // 1. Fetch Owner's Data
+                const ownerResponse = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!ownerResponse.ok) {
+                    const message = await ownerResponse.text();
+                    showError(`Could not fetch owner data: ${message || ownerResponse.statusText}`);
+                    return;
+                }
+
+                const ownerData = await ownerResponse.json();
+                const employeeIds = ownerData.employeeIds || []; // Ensure it's an array
+
+                // 2. Fetch Employee Details
+                const employees = []; // Store fetched employees for search
+                for (const employeeId of employeeIds) {
+                    const employeeResponse = await fetch(`http://localhost:5000/api/employees/${employeeId}`, {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!employeeResponse.ok) {
+                        const message = await employeeResponse.text();
+                        showError(`Could not fetch employee ${employeeId}: ${message || employeeResponse.statusText}`);
+                        continue; // Skip to next employee
+                    }
+
+                    const employee = await employeeResponse.json();
+                    employees.push(employee); // Add to employees array
+                    displayEmployee(employee);
+                }
+
+                // 3. Search Functionality
+                searchInput.addEventListener('input', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const filteredEmployees = employees.filter(employee =>
+                        employee.name.toLowerCase().includes(searchTerm) ||
+                        employee.employeeId.toLowerCase().includes(searchTerm)
+                    );
+                    displayFilteredEmployees(filteredEmployees);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Could not fetch data. Please try again.');
+            }
+        }
+
+        function displayEmployee(employee) {
+            const div = document.createElement('div');
+            div.classList.add('employee'); // Use the same CSS class
+            div.innerHTML = `
+                <div><strong>Name:</strong> ${employee.name || 'N/A'}</div>
+                <p><strong>Email:</strong> ${employee.email || 'N/A'}</p>
+                <p><strong>Employee ID:</strong> ${employee.employeeId || 'N/A'}</p>
+                <p><strong>Mobile:</strong> ${employee.mobile || 'N/A'}</p>
+                <p><strong>Age:</strong> ${employee.age || 'N/A'}</p>
+                <p><strong>Address:</strong> ${employee.address || 'N/A'}</p>
+                <button class="delete-button" data-employee-id="${employee.employeeId}">Delete</button>
+            `;
+            employeeContainer.appendChild(div);
+
+            const deleteButton = div.querySelector('.delete-button');
+            deleteButton.addEventListener('click', () => confirmDelete(employee.employeeId));
+        }
+
+        function displayFilteredEmployees(filteredEmployees) {
+            employeeContainer.innerHTML = ''; // Clear previous display
+            if (filteredEmployees.length === 0) {
+                employeeContainer.innerHTML = '<p>No matching employees found.</p>';
+            } else {
+                filteredEmployees.forEach(displayEmployee);
+            }
+        }
+
+        function confirmDelete(employeeId) {
+            const modal = document.createElement('div');
+            modal.classList.add('modal');
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <p>Are you sure you want to remove this employee?</p>
+                    <div class="modal-buttons">
+                        <button id="confirm-delete">Yes</button>
+                        <button id="cancel-delete">No</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            const confirmButton = modal.querySelector('#confirm-delete');
+            const cancelButton = modal.querySelector('#cancel-delete');
+
+            // Modal Animation (Fade-in)
+            setTimeout(() => {
+                modal.style.opacity = 1;
+            }, 10);
+
+            confirmButton.addEventListener('click', () => {
+                deleteEmployee(employeeId);
+                closeModal(modal);
+            });
+
+            cancelButton.addEventListener('click', () => {
+                closeModal(modal);
+            });
+        }
+
+        function closeModal(modal) {
+            modal.style.opacity = 0;
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        }
+
+        async function deleteEmployee(employeeId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/employees/unassign/${employeeId}`, {
+                    method: 'PATCH', // Use PATCH for partial update
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    showError('Employee unassigned successfully.', 'success'); // Success message
+                    setTimeout(() => {
+                        window.location.reload(); // Refresh the page
+                    }, 1000);
+                } else {
+                    const message = await response.text();
+                    showError(`Could not unassign employee: ${message || response.statusText}`);
+                }
+
+            } catch (error) {
+                console.error('Error unassigning employee:', error);
+                showError('Could not unassign employee. Please try again.');
+            }
+        }
+
+        fetchOwnerAndEmployees(); // Initial load
+    </script>
+    <script src="checkRole.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Employee Management</title>
+    <link rel="stylesheet" type="text/css" href="Employee.css">
+    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="Home.html">Home</a>
+            <a href="History.html">Order history</a>
+            <a href="Order.html">Take Order</a>
+            <a href="Employee.html" class="active">Employee Management</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="employee-management-container">
+            <button onclick="window.location.href='ViewEmployee.html'">View Employee</button>
+            <button onclick="window.location.href='AddEmployee.html'">Add Employee</button>
+            <button onclick="window.location.href='DeleteEmployee.html'">Delete Employee</button>
+        </div>
+    </main>
+
+    <div class="side-menu">
+        <a href="Profile.html">Profile</a>
+        <a href="#">Menu</a>
+        <a href="#" id="logout">Logout</a>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div id="notification-container"></div>
+
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to log out?</p>
+            <div class="modal-buttons">
+                <button id="confirm-logout">Yes</button>
+                <button id="cancel-logout">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Home.js"></script>
+</body>
+
+</html>

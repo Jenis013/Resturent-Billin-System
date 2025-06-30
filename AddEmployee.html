@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Employee</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: url('Log \in.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar a.active {
+            color: red;
+        }
+
+        .logout-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: darkred;
+        }
+
+        .add-employee-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 50px auto;
+            width: 40%;
+        }
+
+        .add-employee-container h2 {
+            color: #c0392b;
+            text-align: center;
+        }
+
+        .add-employee-container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .add-employee-container button {
+            background-color: #c0392b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 48%;
+            margin-top: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+    </header>
+
+    <div class="add-employee-container">
+        <h2>Assign Employee</h2>
+        <form id="assign-form">
+            <label for="employeeId">Employee ID:</label><br>
+            <input type="text" id="employeeId" name="employeeId" required><br><br>
+
+            <button type="button" id="assign-button">Assign</button>
+            <button type="button" onclick="window.location.href='Employee.html'">Back</button>
+
+            <p id="error-message" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        const employeeIdInput = document.getElementById('employeeId');
+        const assignButton = document.getElementById('assign-button');
+        const errorMessage = document.getElementById('error-message');
+
+        assignButton.addEventListener('click', () => {
+            const employeeId = employeeIdInput.value.trim();
+            //const ownerId = localStorage.getItem('ownerId'); // Or however you get it!
+            getOwnerIdAndAssign(employeeId); // Fetch ownerId and then assign
+        });
+
+        async function getOwnerIdAndAssign(employeeId) {
+            try {
+                const token = localStorage.getItem('token'); // Get the token
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': token, // Include the token
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Could not fetch profile data');
+                }
+
+                const data = await response.json();
+                const ownerId = data.ownerId;  // Extract ownerId from profile
+
+                if (!employeeId) {
+                    errorMessage.textContent = "Error: Employee ID is required.";
+                    return;
+                }
+
+                if (!ownerId) {
+                    errorMessage.textContent = "Error: Owner ID is required.";
+                    return;
+                }
+
+                assignEmployee(employeeId, ownerId);
+
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+                errorMessage.textContent = "Error: Could not retrieve owner information.";
+            }
+        }
+
+
+        async function assignEmployee(employeeId, ownerId) {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/assign-employee', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('token') // If you use authentication
+                    },
+                    body: JSON.stringify({ employeeId, ownerId })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.msg); // Success message
+                    // Optionally clear the form or redirect
+                } else {
+                    errorMessage.textContent = data.msg || "Error assigning employee.";
+                }
+
+            } catch (error) {
+                console.error("Error assigning employee:", error);
+                errorMessage.textContent = "Error: Could not communicate with the server.";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

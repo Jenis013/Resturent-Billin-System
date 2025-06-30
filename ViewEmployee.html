@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Restaurant Billing System - View Employee</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: url('Log \in.png') no-repeat center center fixed;
+            /* Replace with your image */
+            background-size: cover;
+            margin: 0;
+            justify-content: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar a.active {
+            color: red;
+        }
+
+        .logout-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: darkred;
+        }
+
+        .search-container {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+
+        .employee-container {
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 80%;
+            margin-left: 10%;
+            align-items: center;
+            position: relative;
+            /* For absolute positioning of the back button */
+        }
+
+        .employee {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .employee p {
+            margin: 5px 0;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #back-button {
+            background-color: #c0392b;
+            /* Match AddEmployee.html button */
+            color: white;
+            padding: 12px 20px;
+            /* Match AddEmployee.html button */
+            border: none;
+            border-radius: 5px;
+            /* Match AddEmployee.html button */
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1em;
+            /* Match AddEmployee.html button */
+        }
+
+        #back-button:hover {
+            background-color: #942b22;
+            /* Darker red on hover */
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="Home.html">Home</a>
+            <a href="History.html">Order history</a>
+            <a href="Order.html">Take Order</a>
+            <a href="Employee.html" class="active">Employee Management</a>
+        </nav>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search Employee">
+    </div>
+
+    <div class="employee-container" id="employeeContainer">
+    </div>
+
+    <button id="back-button" onclick="window.location.href='Employee.html'">Back</button>
+
+    <script>
+        const employeeContainer = document.getElementById('employeeContainer');
+        const searchInput = document.getElementById('searchInput');
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.classList.add('error-message');
+            errorDiv.textContent = message;
+
+            // Style the error box
+            errorDiv.style.backgroundColor = '#f8d7da';
+            errorDiv.style.color = '#721c24';
+            errorDiv.style.border = '1px solid #f5c6cb';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.marginBottom = '10px';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.style.textAlign = 'center';
+            errorDiv.style.opacity = '0'; // Initially hidden
+            errorDiv.style.transition = 'opacity 0.5s ease-in-out'; // Fade animation
+
+            employeeContainer.prepend(errorDiv); // Or wherever you want to display errors
+
+            // Trigger fade-in animation
+            setTimeout(() => {
+                errorDiv.style.opacity = '1';
+            }, 100);
+
+            // Optional: Automatically remove the error message after a few seconds
+            setTimeout(() => {
+                errorDiv.style.opacity = '0';
+                setTimeout(() => errorDiv.remove(), 500); // Remove after fade-out
+            }, 5000); // Adjust time as needed
+        }
+
+        async function fetchOwnerAndEmployees() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    showError('Authentication token is missing.');
+                    return;
+                }
+
+                // 1. Fetch Owner's Data
+                const ownerResponse = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!ownerResponse.ok) {
+                    const message = await ownerResponse.text();
+                    showError(`Could not fetch owner data: ${message || ownerResponse.statusText}`);
+                    return;
+                }
+
+                const ownerData = await ownerResponse.json();
+                const employeeIds = ownerData.employeeIds || []; // Ensure it's an array
+
+                if (employeeIds.length === 0) {
+                    employeeContainer.innerHTML = '<p>No employees assigned to this restaurant.</p>';
+                    return;
+                }
+
+                // 2. Fetch Employee Details
+                const employees = []; // Store fetched employees for search
+                for (const employeeId of employeeIds) {
+                    const employeeResponse = await fetch(`http://localhost:5000/api/employees/${employeeId}`, {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!employeeResponse.ok) {
+                        const message = await employeeResponse.text();
+                        showError(`Could not fetch employee ${employeeId}: ${message || employeeResponse.statusText}`);
+                        continue; // Skip to next employee
+                    }
+
+                    const employee = await employeeResponse.json();
+                    employees.push(employee); // Add to employees array
+                    displayEmployee(employee);
+                }
+
+                // 3. Search Functionality
+                searchInput.addEventListener('input', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const filteredEmployees = employees.filter(employee =>
+                        employee.name.toLowerCase().includes(searchTerm) ||
+                        employee.employeeId.toLowerCase().includes(searchTerm)
+                    );
+                    displayFilteredEmployees(filteredEmployees);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Could not fetch data. Please try again.');
+            }
+        }
+
+        function displayEmployee(employee) {
+            const div = document.createElement('div');
+            div.classList.add('employee'); // Use the same CSS class
+            div.innerHTML = `
+                <p><strong>Name:</strong> ${employee.name || 'N/A'}</p>
+                <p><strong>Email:</strong> ${employee.email || 'N/A'}</p>
+                <p><strong>Employee ID:</strong> ${employee.employeeId || 'N/A'}</p>
+                <p><strong>Mobile:</strong> ${employee.mobile || 'N/A'}</p>
+                <p><strong>Age:</strong> ${employee.age || 'N/A'}</p>
+                <p><strong>Address:</strong> ${employee.address || 'N/A'}</p>
+            `;
+            employeeContainer.appendChild(div);
+        }
+
+        function displayFilteredEmployees(filteredEmployees) {
+            employeeContainer.innerHTML = ''; // Clear previous display
+            if (filteredEmployees.length === 0) {
+                employeeContainer.innerHTML = '<p>No matching employees found.</p>';
+            } else {
+                filteredEmployees.forEach(displayEmployee);
+            }
+        }
+
+        fetchOwnerAndEmployees(); // Initial load
+    </script>
+    <script src="checkRole.js"></script>
+
+</body>
+
+</html>

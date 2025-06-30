@@ -1,0 +1,458 @@
+/* Order.css - Contains all styles, including those from Home.css */
+
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('Log\ In.png') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.navbar a {
+    text-decoration: none;
+    margin: 0 15px;
+    color: black;
+    font-weight: bold;
+}
+
+.navbar a.active {
+    color: red;
+}
+
+/* Menu Icon */
+.menu-icon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 2;
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: darkred;
+}
+
+/* Footer Buttons */
+footer {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 10px auto;
+}
+
+footer .contact-button,
+footer .feedback-button {
+    background-color: white;
+    border: 2px solid red;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+footer .contact-button:hover,
+footer .feedback-button:hover {
+    background-color: red;
+    color: white;
+}
+
+/* Side Menu Styles */
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.side-menu a {
+    padding: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.side-menu a:last-child {
+    margin-bottom: 0;
+}
+
+.side-menu .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* Overlay Styles (for blur) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s, width 0s 0.5s, height 0s 0.5s;
+}
+
+.overlay.active {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: opacity 0.5s, width 0s, height 0s;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+main.blur {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}
+
+/* Notification Styles */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s, transform 0.5s;
+    z-index: 5;
+}
+
+.alert.success {
+    background-color: #4CAF50;
+}
+
+/* Confirmation Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#confirm-logout {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#cancel-logout {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Order-Specific Styles */
+.order-content {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    text-align: center; /* Center the content */
+}
+
+.order-content h1 {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 24px;
+    text-align: center; /* Center the heading */
+}
+
+#table-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center; /* Center the grid horizontally */
+}
+
+.table {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.available {
+    background-color: #a7f1a7;
+}
+
+.occupied {
+    background-color: #f39c9c;
+}
+
+#order-form {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#order-details-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+}
+
+#order-details-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#order-details-form input::placeholder {
+    color: #999;
+}
+
+#order-details-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#order-details-form button:hover {
+    background-color: #45a049;
+}
+
+#message {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Menu Styles from Menu.html (Modified) */
+.menu-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.menu-item {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-item span {
+    font-weight: bold;
+}
+
+/* Quantity Container */
+.quantity-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px; /* Added margin */
+}
+
+.quantity-container button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.quantity-container input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* Added styles below */
+    -moz-appearance: textfield; /* Firefox */
+    -webkit-appearance: none; /* Safari and Chrome */
+    appearance: none;
+    margin: 0; /* Important for some browsers */
+}
+
+.quantity-container input::-webkit-outer-spin-button,
+.quantity-container input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* Important for some browsers */
+}
+
+/* Checkbox Styling */
+input[type="checkbox"] {
+    /* Reset default styles */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    margin-right: 10px;
+    /* Add custom styles */
+    position: relative;
+}
+
+input[type="checkbox"]:checked::before {
+    content: '\2713'; /* Checkmark */
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #4CAF50;
+}
+
+/* Submit Order Button */
+#order-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+#order-form button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Submit Order Button */
+#order-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    /* Enhanced Styles */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Softer shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    /* Added hover effect */
+}
+
+#order-form button[type="submit"]:hover {
+    background-color: #45a049;
+    transform: scale(1.05); /* Slight scale up */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25); /* Stronger shadow on hover */
+}
+
+#order-form button[type="submit"]:active {
+    transform: scale(0.95); /* Slight scale down when active */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Reduced shadow when active */
+}
